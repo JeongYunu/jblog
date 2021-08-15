@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="blog">
+	
+	<select id="adminUser" parameterType="String" resultType="UserVo">
+		<![CDATA[   
+			select id,
+				   userName
+			from users
+			where id = #{ id }
+		]]>
+	</select>
+	
+	<select id="getBlogInfo" parameterType="String" resultType="BlogVo">
+		<![CDATA[   
+			select b.blogTitle blogTitle,
+				   b.logoFile logoFile
+			from blog b, users u
+			where b.id = u.id
+			and u.id = #{ id }
+		]]>
+	</select>
+	
+	<update id="updateUserBlog" parameterType="Map">
+		<![CDATA[   
+			update blog
+			set		blogTitle = #{ blogTitle, jdbcType=VARCHAR },
+					logoFile = #{ logoFile, jdbcType=VARCHAR )
+			where id = #{ id, jdbcType=VARCHAR }
+		]]>
+	</update>
+
+	<update id="updateUserBlogWithFile" parameterType="Map">
+		<![CDATA[   
+			update blog
+			set	   logoFile = #{ logoFile, jdbcType=VARCHAR )
+			where id = #{ id, jdbcType=VARCHAR }
+		]]>
+	</update>
+	
+	<update id="updateUserBlogWithTitle" parameterType="Map">
+		<![CDATA[   
+			update blog
+			set		blogTitle = #{ blogTitle, jdbcType=VARCHAR }
+			where id = #{ id, jdbcType=VARCHAR }
+		]]>
+	</update>
+
+</mapper>
