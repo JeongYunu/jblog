@@ -34,13 +34,12 @@ public class BlogDao {
 		map.put("id", id);
 		map.put("blogTitle", title);
 		map.put("logoFile", saveName);
-		System.out.println(map);
 		
 		return sqlSession.update("blog.updateUserBlog", map);
 	}
 	
 	public int updateUserBlogWithFile(String id, String saveName) {
-		System.out.println("[BlogDao.updateUserBlogWithFile");
+		System.out.println("[BlogDao.updateUserBlogWithFile]");
 		Map<String, String> map = new HashMap<>();
 		map.put("id", id);
 		map.put("logoFile", saveName);
@@ -56,6 +55,35 @@ public class BlogDao {
 		
 		return sqlSession.update("blog.updateUserBlogWithTitle", map);
 	}
+	
+	public int insertUserBlog(String id, String title, String saveName) {
+		System.out.println("[BlogDao.updateUserBlog]");
+		Map<String, String> map = new HashMap<>();
+		map.put("id", id);
+		map.put("blogTitle", title);
+		map.put("logoFile", saveName);
+		
+		return sqlSession.update("blog.insertUserBlog", map);
+	}
+	
+	public int insertUserBlogWithFile(String id, String saveName) {
+		System.out.println("[BlogDao.insertUserBlogWithFile]");
+		Map<String, String> map = new HashMap<>();
+		map.put("id", id);
+		map.put("logoFile", saveName);
+		
+		return sqlSession.update("blog.insertUserBlogWithFile", map);
+	}
+	
+	public int insertUserBlogWithTitle(String id, String blogTitle) {
+		System.out.println("[BlogDao.insertUserBlogWithTitle]");
+		Map<String, String> map = new HashMap<>();
+		map.put("id", id);
+		map.put("blogTitle", blogTitle);
+		
+		return sqlSession.update("blog.insertUserBlogWithTitle", map);
+	}
+	
 	
 	
 	

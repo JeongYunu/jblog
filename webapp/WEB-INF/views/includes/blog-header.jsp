@@ -6,6 +6,8 @@
 window.onload = function(){
 	if(${blogAdmin.blogInfo.blogTitle == null}){
 		$("h1 > a").html("${blogAdmin.adminUser.userName}의 블로그입니다.");
+	}else if(${blogAdmin.blogInfo.blogTitle == "의 블로그입니다."}){
+		$("h1 > a").html("${blogAdmin.adminUser.userName}의 블로그입니다.");
 	}else{
 		$("h1 > a").html("${blogAdmin.blogInfo.blogTitle}");
 		//console.log("${blogAdmin.blogInfo.blogTitle}")

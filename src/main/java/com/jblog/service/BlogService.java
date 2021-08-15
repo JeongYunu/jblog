@@ -81,4 +81,52 @@ public class BlogService {
 		}
 
 	}
+	
+	public int insertUserBlogIfo(String id, String title, MultipartFile file) {
+		System.out.println("[BlogService.insertUserBlogIfo]");
+		if("".equals(title)) {
+			String saveDir = "/Users/yunu/Desktop/javaStudy/upload";
+			String exName = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+			String saveName = System.currentTimeMillis() + UUID.randomUUID().toString() + exName;
+			String filePath = saveDir + "/" + saveName;
+			try {
+				byte[] fileData = file.getBytes();
+				OutputStream out = new FileOutputStream(filePath);
+				BufferedOutputStream bOut = new BufferedOutputStream(out);
+
+				bOut.write(fileData);
+				bOut.close();
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			int count = blogDao.insertUserBlogWithFile(id, saveName);
+			return count;
+		}else if("".equals(file.getOriginalFilename())) {
+			int count = blogDao.insertUserBlogWithTitle(id, title);
+			return count;
+		}else {
+			String saveDir = "/Users/yunu/Desktop/javaStudy/upload";
+			String exName = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+			String saveName = System.currentTimeMillis() + UUID.randomUUID().toString() + exName;
+			String filePath = saveDir + "/" + saveName;
+			try {
+				byte[] fileData = file.getBytes();
+				OutputStream out = new FileOutputStream(filePath);
+				BufferedOutputStream bOut = new BufferedOutputStream(out);
+	
+				bOut.write(fileData);
+				bOut.close();
+	
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			int count = blogDao.insertUserBlog(id, title, saveName);
+			return count;
+		}
+
+	}
 }

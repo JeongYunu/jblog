@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="category">
+
+	<select id="getCategoryList" resultType="CategoryVo">
+ 		<![CDATA[
+			select rownum cateNo,
+			       j.cateName cateName,
+			       j.postCount postCount,
+			       j.description,
+			 	   j.dbNo
+			from (select c.cateNo dbNo,
+			             c.cateName cateName,
+			    	     p.cateNo postCount,
+			             c.description
+			      from category c LEFT outer join post p
+				  on p.cateNo = c.cateNo
+			      order by dbNo asc) j
+			order by cateNo desc
+		]]>
+	</select>
+
+	<insert id="addCategoryKey" parameterType="CategoryVo">
+		<selectKey keyProperty="cateNo" resultType="int" order="BEFORE">
+			<![CDATA[
+				select seq_category_no.nextval from dual
+			]]>
+		</selectKey>
+		<![CDATA[
+			insert into category
+			values(#{ cateNo }, #{ id }, #{ cateName }, #{ description }, sysdate)
+		]]>
+	</insert>
+
+	<select id="selectListOne" parameterType="int" resultType="CategoryVo">
+		<![CDATA[
+			select (select count(*) from category) cateNo,
+			       j.cateName cateName,
+			       j.postCount postCount,
+			       j.description,
+			       j.dbNo
+			from (select c.cateNo dbNo,
+			             c.cateName cateName,
+			             (select count(*) from post) postCount,
+			             c.description
+			      from category c left outer join post p
+			      on c.cateNo = p.cateNo
+			      where c.cateNo = #{ cateNo }) j
+		]]>
+	</select>
+	
+	<delete id="deleteCategoryList" parameterType="int">
+		<![CDATA[
+			delete from category
+			where cateNo = #{ no }
+		]]>
+	</delete>
+
+</mapper>

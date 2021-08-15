@@ -46,5 +46,31 @@
 			where id = #{ id, jdbcType=VARCHAR }
 		]]>
 	</update>
+	
+		<update id="insertUserBlog" parameterType="Map">
+		<![CDATA[   
+			insert into blog
+			values(#{ id, dbcType=VARCHAR }, 
+				   #{ blogTitle, jdbcType=VARCHAR }, 
+				   #{ logoFile, jdbcType=VARCHAR } )
+		]]>
+	</update>
+
+	<update id="insertUserBlogWithFile" parameterType="Map">
+		<![CDATA[   
+			insert into blog
+			values(#{ id, jdbcType=VARCHAR }, 
+				   '의 블로그입니다.',
+				   #{ logoFile, jdbcType=VARCHAR } )
+		]]>
+	</update>
+	
+	<update id="insertUserBlogWithTitle" parameterType="Map">
+		<![CDATA[   
+			insert into blog(id, blogTitle)
+			values(#{ id, jdbcType=VARCHAR }, 
+				   #{ blogTitle, jdbcType=VARCHAR } )
+		]]>
+	</update>
 
 </mapper>

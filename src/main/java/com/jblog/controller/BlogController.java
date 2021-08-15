@@ -49,7 +49,7 @@ public class BlogController {
 		Map<String, Object> blogAdmin = new HashMap<>();
 		blogAdmin.put("adminUser", userVo);
 		blogAdmin.put("blogInfo", blogVo);
-		System.out.println(blogVo);
+		System.out.println("여기냐" + blogVo);
 		
 		model.addAttribute("blogAdmin", blogAdmin);
 		UserVo loginUser = ((UserVo)session.getAttribute("authUser"));
@@ -63,15 +63,30 @@ public class BlogController {
 	}
 	
 	@RequestMapping(value="/{id}/admin/editBlog", method = { RequestMethod.GET, RequestMethod.POST })
-	public String editBlog(@PathVariable("id") String id, 
+	public String editBlog(@PathVariable("id") String id, HttpSession session,
 			@RequestParam(value="blogTitle", required=false, defaultValue="") String title,
 			@RequestParam(value="file", required=false, defaultValue = "") MultipartFile file) {
 		System.out.println("[BlogController.editBlog]");
-		blogService.updateUserBlog(id, title, file);
+		BlogVo blogVo = blogService.getBlogInfo(id);
+		if(blogVo == null) {
+			blogService.insertUserBlogIfo(id, title, file);
+		}else {
+			blogService.updateUserBlog(id, title, file);
+			
+		}
 		
-		return "redirect:/" + id + "/admin/basic";
+		UserVo loginUser = ((UserVo)session.getAttribute("authUser"));
+		if(loginUser == null) {
+			return "error/403";
+		}else if(loginUser.getId().equals(id)){
+			return "redirect:/" + id + "/admin/basic";
+		}else {
+			return "error/403";
+		}
+		
 	}
 	
+
 	
 	
 	
