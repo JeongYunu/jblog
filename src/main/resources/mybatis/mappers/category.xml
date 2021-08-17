@@ -5,18 +5,27 @@
 
 	<select id="getCategoryList" resultType="CategoryVo">
  		<![CDATA[
-			select rownum cateNo,
-			       j.cateName cateName,
-			       j.postCount postCount,
-			       j.description,
-			 	   j.dbNo
-			from (select c.cateNo dbNo,
+			select s.rNo rNo,
+			       s.cateNo cateNo,
+			       s.cateName cateName,
+			       s.postCount postCount,
+			       s.description
+			from (select rownum rNo,
+			             c.cateNo cateNo,
 			             c.cateName cateName,
-			    	     p.cateNo postCount,
-			             c.description
-			      from category c LEFT outer join post p
-				  on p.cateNo = c.cateNo
-			      order by dbNo asc) j
+			             nvl(pcj.postCount, 0) postCount,
+			             c.description      
+			      from category c left outer join (select c.cateNo,
+			                                              c.cateName,
+			                                              pc.postCount
+			                                       from category c, (select count(p.postTitle) postCount,
+			                                                                c.cateNo
+			                                                         from post p, category c
+			                                                         where p.cateNo = c.cateNo
+			                                                        group by c.cateNo) pc
+			                                       where c.cateNo = pc.cateNo) pcj
+			      on c.cateNo = pcj.cateNo
+			      order by cateNo asc) s
 			order by cateNo desc
 		]]>
 	</select>
@@ -35,18 +44,29 @@
 
 	<select id="selectListOne" parameterType="int" resultType="CategoryVo">
 		<![CDATA[
-			select (select count(*) from category) cateNo,
-			       j.cateName cateName,
-			       j.postCount postCount,
-			       j.description,
-			       j.dbNo
-			from (select c.cateNo dbNo,
+			select (select count(*) from category) rNo,
+			       s.cateNo cateNo,
+			       s.cateName cateName,
+			       s.postCount postCount,
+			       s.description
+			from (select rownum rNo,
+			             c.cateNo cateNo,
 			             c.cateName cateName,
-			             (select count(*) from post) postCount,
-			             c.description
-			      from category c left outer join post p
-			      on c.cateNo = p.cateNo
-			      where c.cateNo = #{ cateNo }) j
+			             nvl(pcj.postCount, 0) postCount,
+			             c.description      
+			      from category c left outer join (select c.cateNo,
+			                                              c.cateName,
+			                                              pc.postCount
+			                                       from category c, (select count(p.postTitle) postCount,
+			                                                                c.cateNo
+			                                                         from post p, category c
+			                                                         where p.cateNo = c.cateNo
+			                                                        group by c.cateNo) pc
+			                                       where c.cateNo = pc.cateNo) pcj
+			      on c.cateNo = pcj.cateNo
+			      order by cateNo asc) s
+			where cateNo = #{ cateNo }
+			order by cateNo desc
 		]]>
 	</select>
 	
@@ -56,5 +76,47 @@
 			where cateNo = #{ no }
 		]]>
 	</delete>
+	
+	<select id="getCategoryName" parameterType="String" resultType="CategoryVo">
+		<![CDATA[
+			select cateNo,
+				   cateName
+			from category
+		]]>
+	</select>
 
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

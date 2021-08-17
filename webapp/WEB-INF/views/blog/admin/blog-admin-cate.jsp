@@ -22,36 +22,42 @@ $(function(){
 				cateName: $("[name = 'name']").val(),
 				description: $("[name = 'desc']").val()
 		};
-		$.ajax({
+		console.log(categoryVo.cateName);
+		if( categoryVo.cateName < 1){
+			alert("카테고리명은 필수 입력사항이쥐");
 			
-			url : "${pageContext.request.contextPath }/${ authUser.id }/admin/addCategory",
-			type : "post",
-			//contentType : "application/json",
-			data : categoryVo,
-
-			//dataType : "json",
-			success : function(categoryList) {
-				render(categoryList, "up");
-				$("[name = 'name']").val("");
-				$("[name = 'desc']").val("");
-			},
-			error : function(XHR, status, error) {
-				console.error(status + " : " + error);
-			}
-			
-		});//ajax
+		}else {
+			$.ajax({
+				
+				url : "${pageContext.request.contextPath }/${ authUser.id }/admin/addCategory",
+				type : "post",
+				//contentType : "application/json",
+				data : categoryVo,
+	
+				//dataType : "json",
+				success : function(categoryList) {
+					render(categoryList, "up");
+					$("[name = 'name']").val("");
+					$("[name = 'desc']").val("");
+				},
+				error : function(XHR, status, error) {
+					console.error(status + " : " + error);
+				}
+				
+			});//ajax
+		};//if
 	});//추가버튼
 	
 	$("#cateList").on("click", ".btnCateDel", function (){
 		console.log("삭제 버튼");
-		var dbNo = $(this).data("no");
+		var cateNo = $(this).data("no");
 		var no = $(this).parents("tr").attr("id");
 		console.log(no);
 		
 		$.ajax({
 			url : "${ pageContext.request.contextPath }/${ authUser.id }/admin/delete",
 			type : "post",
-			data : { dbNo },
+			data : { cateNo },
 	
 			dataType : "json",
 			success : function(count) {
@@ -91,13 +97,13 @@ $(function(){
 	
 	function render(categoryList, type){
 		var str = '';
-		str += '<tr class="trDel" id="t-' + categoryList.cateNo + '">';	
-		str += '<td>' + categoryList.cateNo + '</td>';	
+		str += '<tr class="trDel" id="t-' + categoryList.rNo + '">';	
+		str += '<td>' + categoryList.rNo + '</td>';	
 		str += '<td>' + categoryList.cateName +'</td>';	
 		str += '<td>' + categoryList.postCount + '</td>';	
 		str += '<td>' + categoryList.description + '</td>';	
 		str += '<td class="text-center">';	
-		str += '<img class="btnCateDel" data-no=' + categoryList.dbNo + ' src="${pageContext.request.contextPath}/assets/images/delete.jpg">';	
+		str += '<img class="btnCateDel" data-no=' + categoryList.cateNo + ' src="${pageContext.request.contextPath}/assets/images/delete.jpg">';	
 		str += '</td>';	
 		str += '</tr>';	
 	

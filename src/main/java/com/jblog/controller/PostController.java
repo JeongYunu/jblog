@@ -13,33 +13,37 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jblog.service.BlogService;
 import com.jblog.service.CategoryService;
+import com.jblog.service.PostService;
 import com.jblog.vo.BlogVo;
 import com.jblog.vo.CategoryVo;
+import com.jblog.vo.PostVo;
 import com.jblog.vo.UserVo;
 
 @Controller
-public class CategoryController {
-	
+public class PostController {
+
+	@Autowired
+	private PostService postService;
 	@Autowired
 	private BlogService blogService;
 	@Autowired
 	private CategoryService categoryService;
 	
-
-	@RequestMapping(value="/{id}/admin/category", method = { RequestMethod.GET, RequestMethod.POST })
-	public String category(@PathVariable("id") String id, HttpSession session, Model model) {
-		System.out.println("[CategoryController.category]");
+	@RequestMapping(value="/{id}/admin/writeForm", method = { RequestMethod.GET, RequestMethod.POST })
+	public String writeForm(@PathVariable("id") String id, Model model, HttpSession session) {
+		System.out.println("[PostController.writeForm]");
 		Map<String, Object> blogAdmin = new HashMap<>();
 		UserVo userVo = blogService.adminUser(id);
 		BlogVo blogVo = blogService.getBlogInfo(id);
 		blogAdmin.put("adminUser", userVo);
 		blogAdmin.put("blogInfo", blogVo);
-		System.out.println(blogVo);
+		
+		List<CategoryVo> categoryList = categoryService.getCategoryList();
+		blogAdmin.put("categoryList", categoryList);
 		
 		model.addAttribute("blogAdmin", blogAdmin);
 		
@@ -47,39 +51,23 @@ public class CategoryController {
 		if(loginUser == null) {
 			return "error/403";
 		}else if(loginUser.getId().equals(id)){
-			return "blog/admin/blog-admin-cate";
+			return "blog/admin/blog-admin-write";
 		}else {
 			return "error/403";
 		}
 	}
 	
 	@ResponseBody
-	@RequestMapping(value="/{id}/admin/getCategory", method = { RequestMethod.GET, RequestMethod.POST })
-	public List<CategoryVo> categoryList(){
-		System.out.println("[Categorycontroller.categoryList]");
-		List<CategoryVo> categoryList = categoryService.getCategoryList();
-		System.out.println(categoryList);
-		
-		return categoryList;
-	}
-	
-	@ResponseBody
-	@RequestMapping(value="/{id}/admin/addCategory", method = { RequestMethod.GET, RequestMethod.POST })
-	public CategoryVo addCategory(@ModelAttribute CategoryVo categoryVo) {
-		System.out.println("[CategoryController.addCategory]");
-		CategoryVo categoryList  = categoryService.addCategory(categoryVo);
-		
-		return categoryList;
-	}
-	
-	@ResponseBody
-	@RequestMapping(value="/{id}/admin/delete", method = { RequestMethod.GET, RequestMethod.POST })
-	public int delete(@RequestParam("cateNo") int cateNo) {
-		System.out.println("[CategoryController.delete]");
-		int count = categoryService.deleteCategoryList(cateNo);
+	@RequestMapping(value="/{id}/admin/write", method = { RequestMethod.GET, RequestMethod.POST })
+	public int write(@PathVariable("id") String id, @ModelAttribute PostVo postVo) {
+		System.out.println("[PostController.write]");
+		System.out.println(postVo);
+		int count = postService.insertPost(postVo);
 		
 		return count;
 	}
+	
+	
 	
 	
 	

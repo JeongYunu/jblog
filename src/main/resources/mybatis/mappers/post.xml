@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="post">
+	
+	
+	
+	<insert id="insertPost" parameterType="PostVo">
+		<![CDATA[   
+			insert into post
+			values(
+				seq_post_no.nextval,
+				#{ cateNo },
+				#{ postTitle },
+				#{ postContent },
+				sysdate
+			)
+		]]>
+	</insert>
+	
+	<select id="getPostTitle" resultType="PostVo">
+		<![CDATA[
+			select p.postNo postNo,
+			       p.postTitle postTitle,
+			       to_char(p.regDate, 'yyyy/mm/dd') regDate
+			from category c, post p
+			where c.cateNo = p.cateNo
+			and c.cateNo = 28
+			order by postNo desc		
+		]]>
+	</select>
+	
+			<!-- select p.postNo postNo,
+				   p.postTitle postTitle,
+				   to_char(p.regDate, 'yyyy/mm/dd') regDate
+			from category c left outer join post p
+			on c.cateNo = p.cateNo
+			order by postNo desc -->		
+	
+
+
+</mapper>

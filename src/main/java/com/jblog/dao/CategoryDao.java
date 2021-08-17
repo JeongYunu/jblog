@@ -32,9 +32,15 @@ public class CategoryDao {
 		return sqlSession.selectOne("category.selectListOne", cateNo);
 	}
 	
-	public int deleteCategoryList(int no) {
+	public int deleteCategoryList(int cateNo) {
 		System.out.println("[CategoryDao.deleteCategoryList]");
 		
-		return	sqlSession.delete("category.deleteCategoryList", no);
+		return	sqlSession.delete("category.deleteCategoryList", cateNo);
+	}
+	
+	public List<CategoryVo> getCategoryName(){
+		System.out.println("[CategoryDao.getCategoryName]");
+		
+		return sqlSession.selectList("category.getCategoryName");
 	}
 }

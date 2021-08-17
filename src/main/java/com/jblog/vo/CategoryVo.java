@@ -8,14 +8,14 @@ public class CategoryVo {
 	private String description;
 	private String regDate;
 	private int postCount;
-	private int dbNo;
+	private int rNo;
 	
 	public CategoryVo() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public CategoryVo(int cateNo, String id, String cateName, String description, String regDate, int postCount, int dbNo) {
+	public CategoryVo(int cateNo, String id, String cateName, String description, String regDate, int postCount, int rNo) {
 		super();
 		this.cateNo = cateNo;
 		this.id = id;
@@ -23,7 +23,7 @@ public class CategoryVo {
 		this.description = description;
 		this.regDate = regDate;
 		this.postCount = postCount;
-		this.dbNo = dbNo;
+		this.rNo = rNo;
 	}
 
 	public int getCateNo() {
@@ -74,18 +74,19 @@ public class CategoryVo {
 		this.postCount = postCount;
 	}
 
-	public int getDbNo() {
-		return dbNo;
+	public int getrNo() {
+		return rNo;
 	}
 
-	public void setDbNo(int dbNo) {
-		this.dbNo = dbNo;
+	public void setrNo(int rNo) {
+		this.rNo = rNo;
 	}
 
 	@Override
 	public String toString() {
-		return "CategoryVo [cateNo=" + cateNo + ", id=" + id + ", cateName=" + cateName + ", description=" + description + ", regDate=" + regDate + ", postCount=" + postCount + ", dbNo=" + dbNo + "]";
+		return "CategoryVo [cateNo=" + cateNo + ", id=" + id + ", cateName=" + cateName + ", description=" + description + ", regDate=" + regDate + ", postCount=" + postCount + ", rNo=" + rNo + "]";
 	}
+	
 
 	
 

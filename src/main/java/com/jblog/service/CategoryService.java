@@ -33,10 +33,17 @@ public class CategoryService {
 		return categoryListOne;
 	}
 	
-	public int deleteCategoryList(int no) {
+	public int deleteCategoryList(int cateNo) {
 		System.out.println("[CategoryService.deleteCategoryList]");
-		int count = categoryDao.deleteCategoryList(no);
+		int count = categoryDao.deleteCategoryList(cateNo);
 		
 		return count;
+	}
+	
+	public List<CategoryVo> getCategoryName(){
+		System.out.println("[CategoryService.getCategoryName]");
+		List<CategoryVo> categoryName = categoryDao.getCategoryList();
+		
+		return categoryName;
 	}
 }

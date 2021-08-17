@@ -3,6 +3,21 @@
 
 <mapper namespace="blog">
 	
+	<select id="mainPostInfo" resultType="Map">
+		<![CDATA[   
+			select u.id "Id",
+			       u.userName "userName",
+			       p.postTitle "postTitle",
+			       p.postContent "postContent",
+			       to_char(p.regDate, 'yyyy/mm/dd') "regDate"
+			from users u, blog b, category c, post p
+			where u.id = b.id
+			and b.id = c.id
+			and c.cateNo = p.cateNo
+			and p.postNo = (select max(postNo) from post)
+		]]>
+	</select>
+	
 	<select id="adminUser" parameterType="String" resultType="UserVo">
 		<![CDATA[   
 			select id,
@@ -47,30 +62,4 @@
 		]]>
 	</update>
 	
-		<update id="insertUserBlog" parameterType="Map">
-		<![CDATA[   
-			insert into blog
-			values(#{ id, dbcType=VARCHAR }, 
-				   #{ blogTitle, jdbcType=VARCHAR }, 
-				   #{ logoFile, jdbcType=VARCHAR } )
-		]]>
-	</update>
-
-	<update id="insertUserBlogWithFile" parameterType="Map">
-		<![CDATA[   
-			insert into blog
-			values(#{ id, jdbcType=VARCHAR }, 
-				   '의 블로그입니다.',
-				   #{ logoFile, jdbcType=VARCHAR } )
-		]]>
-	</update>
-	
-	<update id="insertUserBlogWithTitle" parameterType="Map">
-		<![CDATA[   
-			insert into blog(id, blogTitle)
-			values(#{ id, jdbcType=VARCHAR }, 
-				   #{ blogTitle, jdbcType=VARCHAR } )
-		]]>
-	</update>
-
 </mapper>

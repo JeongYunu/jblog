@@ -7,7 +7,17 @@
 <meta charset="UTF-8">
 <title>JBlog</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/jblog.css">
-
+<script type="text/javascript" src="${pageContext.request.contextPath }/assets/js/jquery/jquery-1.12.4.js"></script>
+<script type="text/javascript">
+$(function(){
+	$("#btnArea").on("click", ".btn_l", function(){
+		if( $("#textTitle").val() < 1 ){
+			event.preventDefault();
+			alert("블로그 제목은 필수 입력사항이쥐");
+		}
+	});
+});
+</script>
 </head>
 
 <body>
@@ -33,7 +43,7 @@
 						</colgroup>
 						<tr>
 							<td><label for="textTitle">블로그 제목</label></td>
-							<td><input id="textTitle" type="text" name="blogTitle" value=""></td>
+							<td><input id="textTitle" type="text" name="blogTitle" value="${ blogAdmin.blogInfo.blogTitle }"></td>
 						</tr>
 						<tr>
 							<td><label>로고이미지</label></td>

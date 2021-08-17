@@ -1,6 +1,7 @@
 package com.jblog.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -15,7 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.jblog.service.BlogService;
+import com.jblog.service.CategoryService;
+import com.jblog.service.PostService;
 import com.jblog.vo.BlogVo;
+import com.jblog.vo.CategoryVo;
+import com.jblog.vo.PostVo;
 import com.jblog.vo.UserVo;
 
 @Controller
@@ -23,15 +28,29 @@ public class BlogController {
 
 	@Autowired
 	private BlogService blogService;
+	@Autowired
+	private CategoryService categoryService;
+	@Autowired
+	private PostService postService;
 	
 	@RequestMapping(value="/{id}", method = { RequestMethod.GET, RequestMethod.POST })
 	public String blogMain(@PathVariable("id") String id, Model model) {
 		System.out.println("[BlogController.blogMain]");
+		Map<String, Object> blogAdmin = new HashMap<>();
 		UserVo userVo = blogService.adminUser(id);
 		BlogVo blogVo = blogService.getBlogInfo(id);
-		Map<String, Object> blogAdmin = new HashMap<>();
 		blogAdmin.put("adminUser", userVo);
 		blogAdmin.put("blogInfo", blogVo);
+		
+		Map<String, Object> mainPostInfo = blogService.getMainPostInfo();
+		blogAdmin.put("mainPostInfo", mainPostInfo);
+		System.out.println(mainPostInfo);
+		
+		List<CategoryVo> categoryName = categoryService.getCategoryName();
+		blogAdmin.put("categoryVo", categoryName);
+		
+		List<PostVo> postVo = postService.getPostTitle();
+		blogAdmin.put("postVo", postVo);
 		
 		model.addAttribute("blogAdmin", blogAdmin);
 		if(userVo != null) {
@@ -49,7 +68,6 @@ public class BlogController {
 		Map<String, Object> blogAdmin = new HashMap<>();
 		blogAdmin.put("adminUser", userVo);
 		blogAdmin.put("blogInfo", blogVo);
-		System.out.println("여기냐" + blogVo);
 		
 		model.addAttribute("blogAdmin", blogAdmin);
 		UserVo loginUser = ((UserVo)session.getAttribute("authUser"));
@@ -67,13 +85,7 @@ public class BlogController {
 			@RequestParam(value="blogTitle", required=false, defaultValue="") String title,
 			@RequestParam(value="file", required=false, defaultValue = "") MultipartFile file) {
 		System.out.println("[BlogController.editBlog]");
-		BlogVo blogVo = blogService.getBlogInfo(id);
-		if(blogVo == null) {
-			blogService.insertUserBlogIfo(id, title, file);
-		}else {
-			blogService.updateUserBlog(id, title, file);
-			
-		}
+		blogService.updateUserBlog(id, title, file);
 		
 		UserVo loginUser = ((UserVo)session.getAttribute("authUser"));
 		if(loginUser == null) {
